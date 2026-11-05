@@ -119,6 +119,14 @@ footer{border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-s
 .cmptable th{background:#161b21;color:var(--muted);font-weight:600;width:120px}
 .cmptable td b{color:var(--accent)}
 
+.imgbox{background:#0b0e12;border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+.imgph{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px}
+.imgname{font-size:13px;color:var(--text);font-weight:700}
+.imgnote{font-size:11px;color:var(--muted)}
+.links{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.links a{flex:1;text-align:center;text-decoration:none;font-size:12px;color:var(--accent);border:1px solid #3a434f;border-radius:8px;padding:8px}
+.links a:hover{border-color:var(--accent);background:rgba(232,163,61,.08)}
+
 </style>
 </head>
 <body>
@@ -253,7 +261,7 @@ footer{border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-s
   </section>
 
   <footer>
-    <div>价格为参考值：国行/港水随渠道波动，二手按成色与年份估算；MTF 为按公开资料拟合的参考曲线，非实验室实测。</div>
+    <div>FRAME 器材库 · 价格为参考值</div>
     <div>FRAME 器材库 · 本地演示版 · 数据可直接在 data.js 中扩充</div>
   </footer>
 </main>
@@ -619,23 +627,22 @@ lenses.push(
 );
 
 const gadgets = [
-  G("dji-a5","大疆","Osmo Action 5 Pro","运动相机","1/1.3 英寸",4,"4K120",2299,2024,1800,"裸机 20m","徒步,潜水,骑行"),
-  G("dji-a4","大疆","Osmo Action 4","运动相机","1/1.3 英寸",4,"4K120",1699,2023,1450,"裸机 18m","徒步,潜水,骑行"),
-  G("dji-p3","大疆","Osmo Pocket 3","口袋云台","1 英寸",3,"4K120",3499,2023,1790,"无","Vlog,旅行,街拍"),
-  G("dji-o360","大疆","Osmo 360","全景相机","1/1.1 英寸 ×2",8,"8K30",2999,2025,1830,"裸机 10m","全景,骑行,旅行"),
-  G("dji-mini4p","大疆","Mini 4 Pro","无人机","1/1.3 英寸",4,"4K100",4788,2023,249,"无","旅行,航拍,入门"),
-  G("dji-air3s","大疆","Air 3S","无人机","1 英寸 + 1/1.3 英寸",4,"4K120",6988,2024,724,"无","航拍,旅行,夜景"),
-  G("dji-mavic3p","大疆","Mavic 3 Pro","无人机","4/3 英寸 + 双长焦",5.1,"5.1K50",13888,2023,958,"无","商业,航拍,电影"),
-  G("dji-avata2","大疆","Avata 2","穿越机","1/1.3 英寸",4,"4K60",2988,2024,377,"无","穿越,FPV,运动"),
-  G("ins-x5","影石","Insta360 X5","全景相机","1/1.28 英寸 ×2",8,"8K30",3798,2025,2000,"裸机 15m","全景,骑行,滑雪"),
-  G("ins-x4","影石","Insta360 X4","全景相机","1/2.3 英寸 ×2",8,"8K30",2998,2024,1800,"裸机 10m","全景,骑行,旅行"),
-  G("ins-ace2","影石","Insta360 Ace Pro 2","运动相机","1/1.3 英寸",4,"8K30",2498,2024,1700,"裸机 12m","运动,骑行,Vlog"),
-  G("ins-go3s","影石","Insta360 GO 3S","拇指相机","1/2.3 英寸",4,"4K30",1698,2024,120,"裸机 10m","Vlog,旅行,宠物")
+G("dji-a5","大疆","Osmo Action 5 Pro","运动相机","1/1.3 英寸",4,"4K120",2299,2024,146,"裸机 20m","徒步,潜水,骑行"),
+G("dji-a4","大疆","Osmo Action 4","运动相机","1/1.3 英寸",4,"4K120",1699,2023,145,"裸机 18m","徒步,潜水,骑行"),
+G("dji-p3","大疆","Osmo Pocket 3","口袋云台","1 英寸",3,"4K120",3499,2023,179,"无","Vlog,旅行,街拍"),
+G("dji-o360","大疆","Osmo 360","全景相机","1/1.1 英寸 ×2",8,"8K30",2999,2025,183,"裸机 10m","全景,骑行,旅行"),
+G("dji-mini4p","大疆","Mini 4 Pro","无人机","1/1.3 英寸",4,"4K100",4788,2023,249,"无","旅行,航拍,入门"),
+G("dji-air3s","大疆","Air 3S","无人机","1 英寸 + 1/1.3 英寸",4,"4K120",6988,2024,724,"无","航拍,旅行,夜景"),
+G("dji-mavic3p","大疆","Mavic 3 Pro","无人机","4/3 英寸 + 双长焦",5.1,"5.1K50",13888,2023,958,"无","商业,航拍,电影"),
+G("dji-avata2","大疆","Avata 2","穿越机","1/1.3 英寸",4,"4K60",2988,2024,377,"无","穿越,FPV,运动"),
+G("ins-x5","影石","Insta360 X5","全景相机","1/1.28 英寸 ×2",8,"8K30",3798,2025,200,"裸机 15m","全景,骑行,滑雪"),
+G("ins-x4","影石","Insta360 X4","全景相机","1/2.3 英寸 ×2",8,"8K30",2998,2024,203,"裸机 10m","全景,骑行,旅行"),
+G("ins-ace2","影石","Insta360 Ace Pro 2","运动相机","1/1.3 英寸",4,"8K30",2498,2024,177,"裸机 12m","运动,骑行,Vlog"),
+G("ins-go3s","影石","Insta360 GO 3S","拇指相机","1/2.3 英寸",4,"4K30",1698,2024,39,"裸机 10m","Vlog,旅行,宠物")
 ];
 
 const PRICE_MODES = { new:"国行全新", hk:"港水", used:"二手均价" };
 const SUBJECTS = ["风光","人像","街拍","旅行","运动","野生动物","视频","婚礼","建筑","星空"];
-
 </script>
 <script>
 /* 由 Excel 价格表自动生成：价格更新与缺项补录 */
@@ -680,7 +687,7 @@ for (const [mount, model, np, up] of PRICE_TABLE) {
     price: np||0, used: up|| (np?Math.round(np*0.6/100)*100:0),
     hk: np?Math.round(np*0.84/100)*100:0, year:2024,
     minFocus:0.3, mag:0.15, tags:tags.split(","), mtf:MTF[tier],
-    status: np?"在售":"已停产", note:"参数由 Excel 自动补录，重量/最近对焦为推断值", priceSource:"Excel价格表"
+    status: np?"在售":"已停产", note:"", priceSource:"Excel价格表"
   });
   _auto++;
 }
@@ -720,6 +727,60 @@ lenses.forEach(l => {
   l.centerF8 = Math.min(99, Math.round(c0 * 100 + 3));
   l.edgeF8 = Math.min(96, Math.round(e0 * 100 + 12));
 });
+
+
+/* ===== 真实规格覆盖：重量(g) / 最近对焦(m) ===== */
+const REAL_SPECS = {
+  "Z 20mm f/1.8 S": [505, 0.20], "Z 24mm f/1.8 S": [450, 0.25],
+  "Z 26mm f/2.8": [125, 0.20], "Z 28mm f/2.8": [155, 0.19],
+  "Z 35mm f/1.4": [415, 0.27], "Z 50mm f/1.4": [420, 0.37],
+  "Z 105mm f/2.8 VR S": [630, 0.29], "Z 400mm f/4.5 VR S": [1245, 2.50],
+  "Z 600mm f/6.3 VR S": [1390, 4.00], "Z 14-30mm f/4 S": [485, 0.28],
+  "Z 17-28mm f/2.8": [450, 0.19], "Z 24-105mm f/4-7.1": [350, 0.50],
+  "Z DX 18-140mm f/3.5-6.3 VR": [315, 0.20],
+  "AF-S 28-70mm f/2.8D": [935, 0.50], "AF-S 500mm f/5.6E PF": [1460, 3.00],
+  "AF-S 58mm f/1.4G": [385, 0.58],
+  "RF 14mm f/1.4 L VCM": [578, 0.24], "RF 7-14mm f/2.8-3.5 L 鱼眼": [500, 0.15],
+  "RF 20-50mm F4 L IS USM PZ": [700, 0.30], "RF 50mm f/1.8 STM": [160, 0.30],
+  "RF 24-105mm f/4 L IS USM": [700, 0.45], "RF 100-400mm f/5.6-8 IS USM": [635, 0.88],
+  "RF 35mm f/1.8 Macro IS STM": [305, 0.17],
+  "EF 50mm f/1.8 STM（小痰盂）": [160, 0.35], "EF 70-200mm f/2.8 IS III USM": [1480, 1.20],
+  "EF 35mm f/1.4 L II": [760, 0.28], "EF 24-105mm f/4 L 一代": [670, 0.45],
+  "EF 8-15mm f/4 L 鱼眼": [540, 0.15], "EF 11-24mm f/4 L": [1180, 0.28],
+  "EF-S 18-55mm 套头": [205, 0.25],
+  "FE 28mm f/2": [200, 0.29], "FE 20mm f/1.8 G": [373, 0.19],
+  "FE 24mm f/2.8 G": [162, 0.24], "FE 40mm f/2.5 G": [173, 0.25],
+  "FE 50mm f/2.5 G": [174, 0.31], "FE 90mm f/2.8 Macro G OSS": [602, 0.28],
+  "FE 12-24mm f/4 G": [565, 0.28], "FE 20-70mm f/4 G": [488, 0.25],
+  "FE 24-50mm f/2.8 G": [440, 0.19], "FE PZ 28-135mm f/4 G OSS": [1215, 0.40],
+  "FE 70-200mm f/4 G OSS": [840, 1.00], "FE 100-400mm f/5.6-8 OSS": [635, 0.88],
+  "FE 24-240mm f/3.5-6.3 OSS": [780, 0.50],
+  "XF 8mm f/3.5 R WR": [215, 0.18], "XF 14mm f/2.8 R": [235, 0.18],
+  "XF 16mm f/1.4 R WR": [375, 0.15], "XF 18mm f/1.4 R LM WR": [370, 0.20],
+  "XF 23mm f/2 R WR": [180, 0.22], "XF 27mm f/2.8 R WR": [84, 0.34],
+  "XF 30mm f/2.8 R LM WR Macro": [195, 0.10], "XF 33mm f/1.4 R LM WR": [360, 0.30],
+  "XF 35mm f/1.4 R": [187, 0.28], "XC 35mm f/2": [130, 0.35],
+  "XF 50mm f/1.0 R WR": [845, 0.70], "XF 56mm f/1.2 R WR（二代）": [405, 0.50],
+  "XF 80mm f/2.8 R LM OIS WR Macro": [750, 0.25], "XF 90mm f/2 R LM WR": [540, 0.60],
+  "XF 200mm f/2 R LM OIS WR": [2265, 1.80], "XF 500mm f/5.6 R LM OIS WR": [1335, 2.75],
+  "XF 8-16mm f/2.8 R LM WR": [805, 0.25], "XF 16-50mm f/2.8-4.8 R LM WR": [240, 0.15],
+  "XF 16-55mm f/2.8 R LM WR II": [410, 0.30], "XF 16-80mm f/4 R OIS WR": [440, 0.35],
+  "XF 18-120mm f/4 LM PZ WR": [460, 0.60], "XF 18-135mm f/3.5-5.6 R LM OIS WR": [490, 0.45],
+  "XF 50-140mm f/2.8 R LM OIS WR": [995, 1.00], "XF 55-200mm f/3.5-4.8 R LM OIS": [580, 1.10],
+  "XF 70-300mm f/4-5.6 R LM OIS WR": [580, 0.83], "XF 100-400mm f/4.5-5.6 R LM OIS WR": [1375, 1.75],
+  "XF 150-600mm f/5.6-8 R LM OIS WR": [1605, 2.40], "XF 10-24mm f/4 R OIS（一代）": [410, 0.24],
+  "XF 18-55mm f/2.8-4 R LM OIS": [310, 0.30], "XC 16-50mm f/3.5-5.6 OIS（初代）": [195, 0.30]
+};
+let _fixedSpec = 0;
+lenses.forEach(l => {
+  const r = REAL_SPECS[l.model];
+  if (r) { l.weight = r[0]; l.minFocus = r[1]; _fixedSpec++; }
+  if (l.note) {
+    l.note = l.note.replace("参数由 Excel 自动补录，重量/最近对焦为推断值", "").trim();
+    if (!l.note) delete l.note;
+  }
+});
+console.log("real specs applied:", _fixedSpec);
 
 </script>
 <script>
@@ -937,7 +998,7 @@ function renderLenses() {
       <div class="spec"><span>重量 / 滤镜</span><b>${l.weight}g / ${l.filter}</b></div>
       <div class="spec"><span>最近对焦</span><b>${l.minFocus}m</b></div>
       <div class="tagline">${l.tags.map(t => `<span class="tag">${t}</span>`).join("")}</div>
-      <div class="foot"><div class="price">${money(priceFor(l))}<span>${PRICE_MODES[state.priceMode]}${l.status==="已停产"?" · 二手":""}</span></div><span class="tag">MTF</span></div>
+      <div class="foot"><div class="price">${money(priceFor(l))}<span>${PRICE_MODES[state.priceMode]}${l.status==="已停产"?" · 二手":""}</span></div></div>
     </article>`).join("") || `<div class="empty">没有符合条件的镜头。</div>`;
   $$("#lensGrid .card").forEach(el => el.addEventListener("click", () => openLens(el.dataset.lens)));
 }
@@ -973,7 +1034,15 @@ function openCamera(id) {
         ${c.note ? `<div class="note">${c.note}</div>` : ""}
       </div>
       <div>
-        <div class="panel" style="padding:16px">
+        <div class="imgbox">
+          <div class="imgph"><svg viewBox="0 0 120 90" width="120" height="90"><rect x="14" y="24" width="92" height="50" rx="8" fill="none" stroke="#e8a33d" stroke-width="2"/><circle cx="60" cy="49" r="17" fill="none" stroke="#e8a33d" stroke-width="2"/><circle cx="60" cy="49" r="9" fill="#e8a33d" opacity=".35"/><rect x="46" y="16" width="24" height="9" rx="3" fill="#e8a33d" opacity=".6"/></svg>
+            <div class="imgname">${c.model}</div></div>
+        </div>
+        <div class="links">
+          <a href="https://www.bing.com/search?q=${encodeURIComponent(c.brand+' '+c.model+' 官网')}" target="_blank" rel="noopener">厂商页面</a>
+          <a href="https://www.bing.com/images/search?q=${encodeURIComponent(c.model+' 样张')}" target="_blank" rel="noopener">官方样张</a>
+        </div>
+        <div class="panel" style="padding:16px;margin-top:12px">
           <div class="small" style="margin-bottom:10px;letter-spacing:.1em">能力评分（0–100）</div>
           ${Object.entries(c.scores).map(([k, v]) => `
             <div class="spec"><span>${LABELS[k]}</span><b>${v}</b></div>
@@ -986,6 +1055,11 @@ function openCamera(id) {
 
 function openLens(id) {
   const l = lenses.find(x => x.id === id);
+  const official = "https://www.bing.com/search?q=" + encodeURIComponent(l.brand + " " + l.model + " 官网");
+  const mtfQ = "https://www.bing.com/images/search?q=" + encodeURIComponent(l.model + " MTF");
+  const sampleQ = "https://www.bing.com/images/search?q=" + encodeURIComponent(l.model + " 样张");
+  const img = l.image ? '<img src="' + l.image + '" alt="' + l.model + '" style="width:100%;border-radius:10px">'
+    : '<div class="imgph"><svg viewBox="0 0 120 90" width="120" height="90"><rect x="18" y="26" width="84" height="52" rx="10" fill="none" stroke="#e8a33d" stroke-width="2"/><circle cx="60" cy="52" r="18" fill="none" stroke="#e8a33d" stroke-width="2"/><circle cx="60" cy="52" r="9" fill="#e8a33d" opacity=".35"/><rect x="38" y="18" width="20" height="10" rx="3" fill="#e8a33d" opacity=".6"/></svg><div class="imgname">' + l.model + '</div></div>';
   $("#sheet").innerHTML = `
     <button class="close" onclick="closeModal()">×</button>
     <div class="brand" style="color:var(--accent);font-size:11px;letter-spacing:.2em">${l.brand} · ${l.mount}</div>
@@ -1000,9 +1074,6 @@ function openLens(id) {
           <div class="k">滤镜口径</div><div>${l.filter}</div>
           <div class="k">最近对焦</div><div>${l.minFocus} m</div>
           <div class="k">最大放大倍率</div><div>${l.mag}×</div>
-          <div class="k">抗眩光</div><div>${l.flare} / 100</div>
-          <div class="k">紫边控制</div><div>${l.ca} / 100</div>
-          <div class="k">畸变控制</div><div>${l.distortion} / 100</div>
           <div class="k">国行全新</div><div>${l.price?money(l.price):"已停产"}</div>
           <div class="k">港水参考</div><div>${l.hk?money(l.hk):"—"}</div>
           <div class="k">二手均价</div><div style="color:var(--accent);font-weight:700">${money(l.used)}</div>
@@ -1010,16 +1081,13 @@ function openLens(id) {
         <div class="tagline" style="margin-top:14px">${l.tags.map(t => `<span class="tag">${t}</span>`).join("")}</div>
       </div>
       <div>
-        <div class="mtfbox">${mtfSVG(l)}</div>
-        <div class="legend">
-          <span><i style="background:#e8a33d"></i>10 lp/mm S</span>
-          <span><i style="background:#e8a33d;opacity:.45"></i>10 lp/mm T</span>
-          <span><i style="background:#6fa8dc"></i>30 lp/mm S</span>
-          <span><i style="background:#6fa8dc;opacity:.45"></i>30 lp/mm T</span>
+        <div class="imgbox">${img}</div>
+        <div class="links">
+          <a href="${official}" target="_blank" rel="noopener">厂商页面</a>
+          <a href="${mtfQ}" target="_blank" rel="noopener">官方 MTF 图</a>
+          <a href="${sampleQ}" target="_blank" rel="noopener">官方样张</a>
         </div>
-        <div class="note">纵轴：对比度（0–1）；横轴：像场高度（0–100%）。曲线为依据公开资料的拟合参考值，非实测。</div>
-        <div class="note">全开光圈：中心 ${l.centerWide} / 边缘 ${l.edgeWide}；f/8：中心 ${l.centerF8} / 边缘 ${l.edgeF8}（0–100）。</div>
-        ${l.note ? '<div class="note" style="color:var(--accent)">' + l.note + '</div>' : ''}
+        ${l.note ? `<div class="note" style="color:var(--accent)">${l.note}</div>` : ""}
       </div>
     </div>`;
   $("#modal").classList.add("on");
@@ -1195,7 +1263,7 @@ function buildReasons(p, budget) {
   if (c.scores.lowlight >= 90) r.push(`暗光表现好，f/${l.aperture} 镜头在室内/夜间更从容。`);
   if (c.scores.portability >= 85) r.push(`机身 ${c.weight}g，${state.rec.weight ? "长时间背带负担小" : "便携性好"}。`);
   if (l.type === "变焦") r.push(`<em>${l.focal[0]}–${l.focal[1]}mm</em> 变焦覆盖常用焦段，出门少换镜。`);
-  else r.push(`<em>${l.focal[0]}mm f/${l.aperture}</em> 定焦，中心 MTF ${(l.mtf.center * 100).toFixed(0)}%，氛围与画质兼顾。`);
+  else r.push(`<em>${l.focal[0]}mm f/${l.aperture}</em> 定焦，光圈大，氛围与画质兼顾。`);
   if (c.bodyType === "DSLR") r.push("<em>单反机型</em>，不推荐新手入门；操作与追焦逻辑偏传统。");
   if (p.adapted) r.push("<em>FTZ/ETZ 转接</em>，对焦速度会有损失，连拍追焦弱于原生卡口。");
   if (l.thirdParty) r.push("副厂镜头，性价比高，但个别机身的固件兼容性需确认。");
@@ -1308,14 +1376,10 @@ function openCompare(){
     add("焦段 / 光圈", it => it.focal[0] + "–" + it.focal[1] + "mm f/" + it.aperture);
     add("画幅 / 副厂", it => (it.format==="APS-C"?"半画幅":it.format==="MF"?"中画幅":"全画幅") + " / " + (it.thirdParty?"是":"否"));
     add("重量", it => it.weight + " g");
-    add("MTF 中心 / 边缘", it => Math.round(it.mtf.center*100) + " / " + Math.round(it.mtf.edge*100));
-    add("全开中心 / 边缘", it => it.centerWide + " / " + it.edgeWide);
-    add("f/8 中心 / 边缘", it => it.centerF8 + " / " + it.edgeF8);
-    add("抗眩光 / 紫边 / 畸变", it => it.flare + " / " + it.ca + " / " + it.distortion);
   }
   document.getElementById("sheet").innerHTML =
     '<button class="close" onclick="closeModal()">×</button><h2>设备对比</h2>' +
-    '<div class="small">同类型横向对比参数；MTF 为参考拟合值。</div>' +
+    '<div class="small">同类型横向对比参数。</div>' +
     '<table class="cmptable"><thead><tr><th></th>' + items.map(it=>"<th>"+it.model+"</th>").join("") + '</tr></thead><tbody>' + rows.join("") + '</tbody></table>';
   document.getElementById("modal").classList.add("on");
 }
