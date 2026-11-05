@@ -106,6 +106,19 @@ footer{border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-s
 .prices button{background:none;border:0;color:var(--muted);font-size:12px;padding:6px 10px;border-radius:6px;cursor:pointer}
 .prices button.on{background:var(--panel2);color:var(--accent);font-weight:700}
 
+.cmpbtn{position:absolute;right:14px;top:12px;font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:3px 7px;cursor:pointer;background:rgba(0,0,0,.25)}
+.cmpbtn:hover{color:var(--accent);border-color:var(--accent)}
+.cmpbtn.on{background:var(--accent);color:#141414;border-color:var(--accent);font-weight:700}
+.cmpbar{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:none;align-items:center;gap:12px;background:#151a20;border:1px solid #3a434f;border-radius:999px;padding:8px 12px 8px 18px;box-shadow:0 12px 40px rgba(0,0,0,.55);z-index:90;font-size:12px;color:var(--muted)}
+.cmpbar.on{display:flex}
+.cmpbar button{border:0;border-radius:999px;padding:7px 12px;font-size:12px;cursor:pointer}
+#cmpGo{background:var(--accent);color:#141414;font-weight:700}
+#cmpClear{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.cmptable{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:14px}
+.cmptable th,.cmptable td{border:1px solid #2b333d;padding:8px 10px;text-align:left;vertical-align:top}
+.cmptable th{background:#161b21;color:var(--muted);font-weight:600;width:120px}
+.cmptable td b{color:var(--accent)}
+
 </style>
 </head>
 <body>
@@ -220,6 +233,15 @@ footer{border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-s
           </div>
         </div>
         <div class="field">
+          <label>搭配范围（默认都不搭配）</label>
+          <div class="chips" id="scopeChips">
+            <span class="chip" data-opt="allowMF">中画幅</span>
+            <span class="chip" data-opt="allowFilm">胶片</span>
+            <span class="chip" data-opt="allowThird">副厂镜头</span>
+            <span class="chip" data-opt="allowAdapter">FTZ/ETZ 转接</span>
+          </div>
+        </div>
+        <div class="field">
           <label>品牌偏好</label>
           <select id="brandPref" style="width:100%"><option value="">不限</option></select>
         </div>
@@ -235,6 +257,12 @@ footer{border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-s
     <div>FRAME 器材库 · 本地演示版 · 数据可直接在 data.js 中扩充</div>
   </footer>
 </main>
+
+<div class="cmpbar" id="cmpBar">
+  <span id="cmpText">对比栏为空</span>
+  <button id="cmpGo">开始对比</button>
+  <button id="cmpClear">清空</button>
+</div>
 
 <div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
 <script>
@@ -610,6 +638,91 @@ const SUBJECTS = ["风光","人像","街拍","旅行","运动","野生动物","�
 
 </script>
 <script>
+/* 由 Excel 价格表自动生成：价格更新与缺项补录 */
+const PRICE_TABLE = [["Nikon Z", "Z 20mm f/1.8 S", 6999, 4688], ["Nikon Z", "Z 24mm f/1.8 S", 6680, 3600], ["Nikon Z", "Z 26mm f/2.8", 3599, 2500], ["Nikon Z", "Z 28mm f/2.8", 1899, 820], ["Nikon Z", "Z 35mm f/1.2 S", 20999, 15699], ["Nikon Z", "Z 35mm f/1.4", 4999, 3500], ["Nikon Z", "Z 35mm f/1.8 S", 5499, 3666], ["Nikon Z", "Z 40mm f/2", 1899, 980], ["Nikon Z", "Z 50mm f/1.4", 4099, 3449], ["Nikon Z", "Z 50mm f/1.2 S", 14999, 8500], ["Nikon Z", "Z 85mm f/1.8 S", 5399, null], ["Nikon Z", "Z 85mm f/1.2 S", 17199, null], ["Nikon Z", "Z 105mm f/2.8 VR S", 7349, 4720], ["Nikon Z", "Z 135mm f/1.8 S Plena", 19999, 13000], ["Nikon Z", "Z 400mm f/4.5 VR S", 22799, 13999], ["Nikon Z", "Z 600mm f/6.3 VR S", 36499, 27980], ["Nikon Z", "Z 800mm f/6.3 VR S", 44499, 30999], ["Nikon Z", "Z 14-24mm f/2.8 S", 16800, 11100], ["Nikon Z", "Z 14-30mm f/4 S", 8299, 5500], ["Nikon Z", "Z 17-28mm f/2.8", 8299, 4350], ["Nikon Z", "Z 24-70mm f/2.8 S", 14999, 7988], ["Nikon Z", "Z 24-70mm f/2.8 S II", 19999, 15000], ["Nikon Z", "Z 24-70mm f/4 S", 3089, 2700], ["Nikon Z", "Z 24-105mm f/4-7.1", 3980, null], ["Nikon Z", "Z 28-75mm f/2.8", 5500, 4400], ["Nikon Z", "Z 100-400mm f/4.5-5.6 VR S", 16589, null], ["Nikon Z", "Z DX 16-50mm f/3.5-6.3 VR", 1099, 650], ["Nikon Z", "Z DX 18-140mm f/3.5-6.3 VR", 3099, null], ["Nikon Z", "Z DX 35mm f/1.7", 2999, null], ["Nikon F", "AF-S 50mm f/1.8G", null, 650], ["Nikon F", "AF-S 14-24mm f/2.8G", null, 1200], ["Nikon F", "AF-S 28-70mm f/2.8D", null, 900], ["Nikon F", "AF-S 105mm f/1.4E ED", null, null], ["Nikon F", "AF-S 500mm f/5.6E PF", null, null], ["Nikon F", "AF-S 58mm f/1.4G", null, null], ["Canon RF", "RF 14mm f/1.4 L VCM", 16499, null], ["Canon RF", "RF 7-14mm f/2.8-3.5 L 鱼眼", 11399, null], ["Canon RF", "RF 20-50mm F4 L IS USM PZ", 9099, null], ["Canon RF", "RF 50mm f/1.8 STM", 1374, 1300], ["Canon RF", "RF 24-105mm f/4 L IS USM", 8073, 8500], ["Canon RF", "RF 24-105mm f/4-7.1 IS STM", null, 4000], ["Canon RF", "RF 100-400mm f/5.6-8 IS USM", 5106, 3660], ["Canon RF", "RF 35mm f/1.8 Macro IS STM", null, 2330], ["Canon EF", "EF 50mm f/1.8 STM（小痰盂）", null, 610], ["Canon EF", "EF 70-200mm f/2.8 IS III USM", null, 6500], ["Canon EF", "EF 70-200mm f/2.8 L IS II（小白兔）", null, 5000], ["Canon EF", "EF 70-200mm f/2.8 L 一代（无 IS）", null, 2700], ["Canon EF", "EF 70-200mm f/4 L", null, 1650], ["Canon EF", "EF 35mm f/1.4 L II", null, 7000], ["Canon EF", "EF 24-105mm f/4 L 一代", null, 1750], ["Canon EF", "EF 8-15mm f/4 L 鱼眼", null, 2650], ["Canon EF", "EF 11-24mm f/4 L", null, 4250], ["Canon EF", "EF-S 18-55mm 套头", null, 275], ["Sony E", "FE 28mm f/2", 2600, 1617], ["Sony E", "FE 55mm f/1.8 ZA", 4700, 2550], ["Sony E", "FE 50mm f/1.8", 1638, 820], ["Sony E", "FE 85mm f/1.8", 4000, 2000], ["Sony E", "FE 16mm f/1.8 G", 6499, 4950], ["Sony E", "FE 20mm f/1.8 G", 7499, 3400], ["Sony E", "FE 24mm f/2.8 G", 4499, 2800], ["Sony E", "FE 40mm f/2.5 G", 4499, 3200], ["Sony E", "FE 50mm f/2.5 G", 4499, 2450], ["Sony E", "FE 90mm f/2.8 Macro G OSS", 6599, 3799], ["Sony E", "FE 12-24mm f/4 G", 11199, 6910], ["Sony E", "FE PZ 16-35mm f/4 G", 8499, 5650], ["Sony E", "FE 20-70mm f/4 G", 7999, 5180], ["Sony E", "FE 24-50mm f/2.8 G", 7999, 5000], ["Sony E", "FE 24-105mm f/4 G OSS", 9099, 4369], ["Sony E", "FE PZ 28-135mm f/4 G OSS", 14800, 10500], ["Sony E", "FE 70-200mm f/4 G OSS", 7770, 6505], ["Sony E", "FE 70-200mm f/4 G OSS II", 10999, 8299], ["Sony E", "FE 70-200mm f/2.8 GM OSS II", 20975, null], ["Sony E", "FE 200-600mm f/5.6-6.3 G OSS", 12899, 11900], ["Sony E", "FE 400-800mm f/6.3-8 G", 18999, 15555], ["Sony E", "FE 100-400mm f/5.6-8 OSS", 5499, null], ["Sony E", "FE 24-70mm f/2.8 GM II", 12394, null], ["Sony E", "FE 50mm f/1.4 GM", null, 5719], ["Sony E", "FE 50mm f/1.2 GM", null, 7999], ["Sony E", "FE 70-200mm f/2.8 GM 一代", null, 6850], ["Sony E", "FE 28-70mm f/3.5-5.6 OSS（套头）", null, 1100], ["Sony E", "FE 24-240mm f/3.5-6.3 OSS", null, 2350], ["Sony E", "FE 50mm f/1.4 G（A卡口）", null, 5200], ["Fujifilm X", "XF 8mm f/3.5 R WR", 5490, 2970], ["Fujifilm X", "XF 14mm f/2.8 R", 5750, 2000], ["Fujifilm X", "XF 16mm f/1.4 R WR", 6620, 3000], ["Fujifilm X", "XF 16mm f/2.8 R WR", 2680, 1589], ["Fujifilm X", "XF 18mm f/1.4 R LM WR", 6490, 3450], ["Fujifilm X", "XF 18mm f/2 R", 3800, 1650], ["Fujifilm X", "XF 23mm f/2 R WR", 3490, 1205], ["Fujifilm X", "XF 23mm f/1.4 R LM WR（二代）", 5840, 3500], ["Fujifilm X", "XF 27mm f/2.8 R WR", 2690, 1680], ["Fujifilm X", "XF 30mm f/2.8 R LM WR Macro", 4190, 2700], ["Fujifilm X", "XF 33mm f/1.4 R LM WR", 5190, 3700], ["Fujifilm X", "XF 35mm f/1.4 R", 3890, 2666], ["Fujifilm X", "XF 35mm f/2 R WR", 3390, 2000], ["Fujifilm X", "XC 35mm f/2", 1390, 900], ["Fujifilm X", "XF 50mm f/1.0 R WR", 10490, 6350], ["Fujifilm X", "XF 50mm f/2 R WR", 3590, 1950], ["Fujifilm X", "XF 56mm f/1.2 R WR（二代）", 6620, 4399], ["Fujifilm X", "XF 56mm f/1.2 R APD", 9460, 4050], ["Fujifilm X", "XF 80mm f/2.8 R LM OIS WR Macro", 7790, 4000], ["Fujifilm X", "XF 90mm f/2 R LM WR", 6320, 3300], ["Fujifilm X", "XF 200mm f/2 R LM OIS WR", 33900, 18666], ["Fujifilm X", "XF 500mm f/5.6 R LM OIS WR", 21400, 15800], ["Fujifilm X", "XF 8-16mm f/2.8 R LM WR", 9990, 5049], ["Fujifilm X", "XF 16-50mm f/2.8-4.8 R LM WR", 4990, 2750], ["Fujifilm X", "XF 16-55mm f/2.8 R LM WR II", 8390, 8000], ["Fujifilm X", "XF 16-80mm f/4 R OIS WR", 5580, 2400], ["Fujifilm X", "XF 18-120mm f/4 LM PZ WR", 5990, 3000], ["Fujifilm X", "XF 18-135mm f/3.5-5.6 R LM OIS WR", 5688, 1800], ["Fujifilm X", "XF 50-140mm f/2.8 R LM OIS WR", 9580, 5600], ["Fujifilm X", "XF 55-200mm f/3.5-4.8 R LM OIS", 4370, 1800], ["Fujifilm X", "XF 70-300mm f/4-5.6 R LM OIS WR", 5390, 3800], ["Fujifilm X", "XF 100-400mm f/4.5-5.6 R LM OIS WR", 12600, 4900], ["Fujifilm X", "XF 150-600mm f/5.6-8 R LM OIS WR", 13500, 7500], ["Fujifilm X", "XC 15-45mm f/3.5-5.6 OIS PZ", 1390, 550], ["Fujifilm X", "XC 50-230mm f/4.5-6.7 OIS II", 1999, 950], ["Fujifilm X", "XF 10-24mm f/4 R OIS（一代）", null, 1350], ["Fujifilm X", "XF 16-55mm f/2.8 R LM WR（一代）", null, 4661], ["Fujifilm X", "XF 18-55mm f/2.8-4 R LM OIS", null, 1400], ["Fujifilm X", "XF 23mm f/1.4 R（一代）", null, null], ["Fujifilm X", "XF 56mm f/1.2 R（一代）", null, 2250], ["Fujifilm X", "XC 16-50mm f/3.5-5.6 OIS（初代）", null, 400], ["Fujifilm X", "XC 50-230mm f/4.5-6.7 OIS（初代）", null, 800]];
+function _normKey(a,b,ap){ return a+"-"+b+"-"+Math.round(ap*10)/10; }
+function _parseKey(model){
+  const m = String(model).replace(/（.*?）/g,"").replace(/\(.*?\)/g,"");
+  const fm = m.match(/(\d+)\s*(?:-\s*(\d+))?\s*mm/i);
+  const ap = m.match(/f\s*\/?\s*(\d+(?:\.\d+)?)/i);
+  if(!fm) return null;
+  return {a:+fm[1], b:fm[2]?+fm[2]:+fm[1], ap:ap?+ap[1]:3.5};
+}
+function _brandOf(mount){ return mount.startsWith("Nikon")?"尼康":mount.startsWith("Canon")?"佳能":mount.startsWith("Sony")?"索尼":mount.startsWith("Fujifilm")?"富士":"其他"; }
+
+// 1) 先按 卡口+焦段+光圈 更新已有镜头价格
+for (const [mount, model, np, up] of PRICE_TABLE) {
+  const k = _parseKey(model); if(!k) continue;
+  const hit = lenses.find(l => l.mount===mount && l.focal[0]===k.a && l.focal[1]===k.b && Math.abs(l.aperture-k.ap)<0.11);
+  if (hit) {
+    if (np) hit.price = np;
+    if (up) hit.used = up;
+    hit.hk = hit.price ? Math.round(hit.price*0.84/100)*100 : 0;
+    hit.priceSource = "Excel价格表";
+  }
+}
+
+// 2) 未匹配到的型号自动补录（参数为推断，详情页有备注）
+let _auto = 0;
+for (const [mount, model, np, up] of PRICE_TABLE) {
+  const k = _parseKey(model); if(!k) continue;
+  const exists = lenses.find(l => l.mount===mount && l.focal[0]===k.a && l.focal[1]===k.b && Math.abs(l.aperture-k.ap)<0.11);
+  if (exists) continue;
+  const zoom = k.a !== k.b;
+  const tele = k.b >= 200;
+  const tier = tele ? "telez" : (k.ap<=1.8 ? "prop" : (zoom ? "stdz" : "stdp"));
+  const weight = tele ? 1600 : (zoom ? 700 : 420);
+  const tags = tele ? "野生动物,运动" : (k.ap<=2.0 ? "人像,婚礼" : (k.a<=24 ? "风光,建筑" : "旅行,街拍"));
+  lenses.push({
+    id:"auto-"+mount.replace(/\W/g,"")+"-"+k.a+"-"+k.b+"-"+String(k.ap).replace(".",""),
+    brand:_brandOf(mount), model, mount, type: zoom?"变焦":"定焦",
+    focal:[k.a,k.b], aperture:k.ap, weight, filter:"—",
+    price: np||0, used: up|| (np?Math.round(np*0.6/100)*100:0),
+    hk: np?Math.round(np*0.84/100)*100:0, year:2024,
+    minFocus:0.3, mag:0.15, tags:tags.split(","), mtf:MTF[tier],
+    status: np?"在售":"已停产", note:"参数由 Excel 自动补录，重量/最近对焦为推断值", priceSource:"Excel价格表"
+  });
+  _auto++;
+}
+console.log("auto-added lenses:", _auto);
+
+// 3) 新机身（2025）
+cameras.push(...[
+  {id:"a7r6", brand:"索尼", model:"α7R VI", mount:"Sony E", sensor:"全画幅", mp:61, iso:"100-32000", ibis:8.5, af:"759点", burst:10, video:"8K30", weight:695, price:29999, used:27500, hk:24500, year:2025, type:"高像素", tags:["风光","人像","商业"], scores:{resolution:99,lowlight:82,af:92,video:88,portability:66}, status:"在售", note:"2025 新机，参数与价格以官方发布为准"},
+  {id:"a7v", brand:"索尼", model:"α7 V", mount:"Sony E", sensor:"全画幅", mp:33, iso:"100-51200", ibis:8, af:"759点", burst:15, video:"4K120", weight:695, price:18999, used:17500, hk:15600, year:2025, type:"均衡全能", tags:["人像","旅行","视频","运动"], scores:{resolution:84,lowlight:90,af:94,video:92,portability:70}, status:"在售", note:"2025 新机，参数与价格以官方发布为准"}
+]);
+
+
+/* ===== 属性补全：画幅/机身类型/对焦逻辑/取景器/屏幕/镜头光学项 ===== */
+cameras.forEach(c => {
+  const film = /胶片/.test(c.sensor) || /胶片/.test(c.type);
+  c.format = /中画幅/.test(c.sensor) ? "MF" : (/APS-C/.test(c.sensor) ? "APS-C" : (film ? "Film" : "FF"));
+  c.bodyType = film ? "Film" : (/单反/.test(c.type) ? "DSLR" : (c.mount === "固定镜头" ? "Compact" : "Mirrorless"));
+  c.afLogic = c.scores.af >= 93 ? "AI 主体识别 + 相位/对比混合"
+            : c.scores.af >= 85 ? "相位检测 + 眼部识别"
+            : c.scores.af >= 60 ? "相位/对比混合" : "手动对焦";
+  c.evf = c.bodyType !== "Compact" || /X100|Q3/.test(c.model);
+  c.screen = c.bodyType === "DSLR" ? "固定屏（部分型号可翻折）" : "侧翻触控屏";
+  c.beginnerNote = c.bodyType === "DSLR" ? "单反，不推荐新手入门" : "";
+});
+
+lenses.forEach(l => {
+  l.format = /DX|RF-S|EF-S|XC |18-55|16-50|18-50|55-210|50-230|18-135|18-140/.test(l.model)
+    ? "APS-C"
+    : ((l.mount === "Hasselblad X" || l.mount === "Fujifilm G") ? "MF" : "FF");
+  l.thirdParty = ["适马","腾龙","永诺","老蛙","星曜","唯卓仕","蔡司"].includes(l.brand);
+  const c0 = l.mtf.center, e0 = l.mtf.edge, a0 = l.mtf.astig;
+  l.flare = Math.max(50, Math.min(98, Math.round(55 + e0 * 45)));
+  l.ca = Math.max(50, Math.min(97, Math.round(62 + c0 * 32 - a0 * 90)));
+  l.distortion = Math.max(55, Math.min(96, Math.round(l.type === "定焦" ? 88 : (l.focal[0] <= 16 ? 62 : 74))));
+  l.centerWide = Math.round(c0 * 100 - (l.aperture < 2 ? 3 : 1));
+  l.edgeWide = Math.round(e0 * 100 - 6);
+  l.centerF8 = Math.min(99, Math.round(c0 * 100 + 3));
+  l.edgeF8 = Math.min(96, Math.round(e0 * 100 + 12));
+});
+
+</script>
+<script>
 window.onerror=function(m,src,l,c){document.title="ERR:"+m+"@"+l;};
 /* FRAME 器材库 · 前端逻辑 */
 const $ = (s, el=document) => el.querySelector(s);
@@ -628,7 +741,7 @@ const state = {
   cam: { brand: "", mount: "", sensor: "", price: "", q: "" },
   lens: { brand: "", mount: "", type: "", price: "", q: "" },
   gadget: { brand: "", type: "", q: "" },
-  rec: { budget: 10000, subjects: ["旅行", "人像"], video: 2, weight: 1, brand: "" }
+  rec: { budget: 10000, subjects: ["旅行", "人像"], video: 2, weight: 1, brand: "", allowMF: false, allowFilm: false, allowThird: false, allowAdapter: false }
 };
 
 function init() {
@@ -743,6 +856,11 @@ function init() {
   });
   $("#goRec").addEventListener("click", renderRecommend);
   $("#brandPref").addEventListener("change", e => state.rec.brand = e.target.value);
+  $$("#scopeChips .chip").forEach(ch => ch.addEventListener("click", () => {
+    const k = ch.dataset.opt;
+    state.rec[k] = !state.rec[k];
+    ch.classList.toggle("on", state.rec[k]);
+  }));
 
   $("#modal").addEventListener("click", e => { if (e.target.id === "modal") closeModal(); });
   document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
@@ -788,7 +906,7 @@ function renderCameras() {
   );
   $("#camHint").textContent = list.length + " 台符合条件";
   $("#camGrid").innerHTML = list.map(c => `
-    <article class="card" data-cam="${c.id}">
+    <article class="card" data-cam="${c.id}"><span class="cmpbtn" data-ct="cam" data-cid="${c.id}">＋对比</span>
       <div class="brand">${c.brand} · ${c.mount}</div>
       <h3>${c.model}</h3>
       <div class="sub">${c.type} · ${c.year} 年</div>
@@ -812,7 +930,7 @@ function renderLenses() {
   );
   $("#lensHint").textContent = list.length + " 支符合条件";
   $("#lensGrid").innerHTML = list.map(l => `
-    <article class="card" data-lens="${l.id}">
+    <article class="card" data-lens="${l.id}"><span class="cmpbtn" data-ct="lens" data-cid="${l.id}">＋对比</span>
       <div class="brand">${l.brand} · ${l.mount}</div>
       <h3>${l.model.replace(/^(NIKKOR Z|RF|FE|XF)\s*/, "")}</h3>
       <div class="sub">${l.type} · ${l.focal[0]}–${l.focal[1]}mm · f/${l.aperture}</div>
@@ -840,6 +958,9 @@ function openCamera(id) {
           <div class="k">ISO</div><div>${c.iso}</div>
           <div class="k">防抖</div><div>${c.ibis ? "机身 " + c.ibis + " 档" : "无机身防抖"}</div>
           <div class="k">自动对焦</div><div>${c.af}</div>
+          <div class="k">对焦逻辑</div><div>${c.afLogic||"—"}</div>
+          <div class="k">取景器</div><div>${c.evf?"有":"无"}</div>
+          <div class="k">翻转屏</div><div>${c.screen||"—"}</div>
           <div class="k">连拍</div><div>${c.burst} 张/秒</div>
           <div class="k">视频</div><div>${c.video}</div>
           <div class="k">重量</div><div>${c.weight} g（含电池）</div>
@@ -848,6 +969,8 @@ function openCamera(id) {
           <div class="k">二手均价</div><div style="color:var(--accent);font-weight:700">${money(c.used)}</div>
         </div>
         <div class="tagline" style="margin-top:14px">${c.tags.map(t => `<span class="tag">${t}</span>`).join("")}</div>
+        ${c.beginnerNote ? `<div class="note" style="color:var(--accent)">${c.beginnerNote}</div>` : ""}
+        ${c.note ? `<div class="note">${c.note}</div>` : ""}
       </div>
       <div>
         <div class="panel" style="padding:16px">
@@ -877,6 +1000,9 @@ function openLens(id) {
           <div class="k">滤镜口径</div><div>${l.filter}</div>
           <div class="k">最近对焦</div><div>${l.minFocus} m</div>
           <div class="k">最大放大倍率</div><div>${l.mag}×</div>
+          <div class="k">抗眩光</div><div>${l.flare} / 100</div>
+          <div class="k">紫边控制</div><div>${l.ca} / 100</div>
+          <div class="k">畸变控制</div><div>${l.distortion} / 100</div>
           <div class="k">国行全新</div><div>${l.price?money(l.price):"已停产"}</div>
           <div class="k">港水参考</div><div>${l.hk?money(l.hk):"—"}</div>
           <div class="k">二手均价</div><div style="color:var(--accent);font-weight:700">${money(l.used)}</div>
@@ -892,6 +1018,7 @@ function openLens(id) {
           <span><i style="background:#6fa8dc;opacity:.45"></i>30 lp/mm T</span>
         </div>
         <div class="note">纵轴：对比度（0–1）；横轴：像场高度（0–100%）。曲线为依据公开资料的拟合参考值，非实测。</div>
+        <div class="note">全开光圈：中心 ${l.centerWide} / 边缘 ${l.edgeWide}；f/8：中心 ${l.centerF8} / 边缘 ${l.edgeF8}（0–100）。</div>
         ${l.note ? '<div class="note" style="color:var(--accent)">' + l.note + '</div>' : ''}
       </div>
     </div>`;
@@ -957,13 +1084,13 @@ function focalFit(l, subj) {
   const a = l.focal[0], b = l.focal[1], ap = l.aperture;
   switch (subj) {
     case "风光": return a <= 24 ? 1 : a <= 35 ? .85 : a <= 70 ? .55 : .25;
-    case "人像": return (b >= 50 && a <= 135) ? (ap <= 1.8 ? 1 : .82) : .3;
-    case "街拍": return (a >= 23 && b <= 70) ? (l.weight < 600 ? 1 : .8) : .35;
-    case "旅行": return (b / a >= 3) ? 1 : (a <= 24 && b >= 70) ? .9 : .6;
+    case "人像": return (b >= 50 && a <= 135) ? (ap <= 1.8 ? 1 : (ap <= 2.8 ? .85 : .35)) : .3;
+    case "街拍": return (a >= 23 && b <= 70) ? (ap <= 2.8 ? 1 : .7) : .35;
+    case "旅行": return (a <= 24 && b >= 70 && b <= 200) ? 1 : (b > 200 ? .45 : (b / a >= 2.5 ? .8 : .55));
     case "运动": return b >= 200 ? 1 : b >= 135 ? .8 : b >= 70 ? .6 : .2;
     case "野生动物": return b >= 400 ? 1 : b >= 200 ? .8 : .2;
     case "视频": return l.type === "变焦" ? (a <= 24 && b >= 70 ? 1 : .8) : .6;
-    case "婚礼": return (a >= 35 && b <= 135) ? (ap <= 2 ? 1 : .85) : .4;
+    case "婚礼": return (a >= 35 && b <= 135) ? (ap <= 2.8 ? 1 : .5) : .4;
     case "建筑": return a <= 24 ? 1 : a <= 35 ? .7 : .3;
     case "星空": return (a <= 24 && ap <= 2.8) ? 1 : (a <= 35 && ap <= 1.8) ? .9 : .3;
     default: return .5;
@@ -991,26 +1118,44 @@ function lensFit(l, subjects) {
 }
 
 function renderRecommend() {
-  const budget = state.rec.budget, subjects = state.rec.subjects, video = state.rec.video, weight = state.rec.weight, brand = state.rec.brand;
+  const R = state.rec;
+  const budget = R.budget, subjects = R.subjects, video = R.video, weight = R.weight, brand = R.brand;
   const bw = bodyWeights(subjects, video, weight);
+  const wildlife = subjects.includes("野生动物");
   const pairs = [];
   for (const c of cameras) {
     if (brand && c.brand !== brand) continue;
+    if (c.format === "MF" && !R.allowMF) continue;
+    if (c.format === "Film" && !R.allowFilm) continue;
+    if (video >= 1 && (c.scores.af || 0) < 80) continue;
+    const bodyBonus = (c.bodyType === "Mirrorless" && c.format === "FF") ? 6
+                    : c.bodyType === "Mirrorless" ? 3
+                    : c.bodyType === "DSLR" ? -12 : 0;
     if (c.mount === "固定镜头") {
-      const fixed = { focal: [23, 23], aperture: 2, weight: 0, mtf: { center: .95, edge: .7, astig: .04 }, model: "23mm f/2 固定镜头", type: "定焦" };
+      const fixed = { focal: [23, 23], aperture: 2, weight: 0, mtf: { center: .95, edge: .7, astig: .04 }, model: "23mm f/2 固定镜头", type: "定焦", format: c.format, thirdParty: false };
       if (priceFor(c) > budget) continue;
       const ls = lensFit(fixed, subjects);
       const bs = Object.entries(bw).reduce((s, [k, w]) => s + (c.scores[k] || 0) * w, 0);
-      pairs.push({ c, l: fixed, total: priceFor(c), score: bs * .7 + ls.total * 100 * .3, ls });
+      pairs.push({ c, l: fixed, total: priceFor(c), score: bs * .7 + ls.total * 100 * .3 + bodyBonus, ls, adapted: false });
       continue;
     }
     for (const l of lenses) {
-      if (l.mount !== c.mount) continue;
+      let adapted = false;
+      if (l.mount !== c.mount) {
+        const ok = R.allowAdapter && c.mount === "Nikon Z" && (l.mount === "Nikon F" || l.mount === "Sony E");
+        if (!ok) continue;
+        adapted = true;
+      }
+      if (l.thirdParty && !R.allowThird) continue;
+      if (c.format === "FF" && l.format === "APS-C") continue;
+      if (c.format === "APS-C" && l.format === "MF") continue;
+      if (c.format === "MF" && l.format !== "MF") continue;
+      if (wildlife && l.focal[1] < 400) continue;
       const total = priceFor(c) + priceFor(l);
       if (total > budget) continue;
       const ls = lensFit(l, subjects);
       const bs = Object.entries(bw).reduce((s, [k, w]) => s + (c.scores[k] || 0) * w, 0);
-      pairs.push({ c, l, total, score: bs * .7 + ls.total * 100 * .3, ls });
+      pairs.push({ c, l, total, score: bs * .7 + ls.total * 100 * .3 + bodyBonus, ls, adapted });
     }
   }
   pairs.sort((a, b) => b.score - a.score);
@@ -1051,6 +1196,14 @@ function buildReasons(p, budget) {
   if (c.scores.portability >= 85) r.push(`机身 ${c.weight}g，${state.rec.weight ? "长时间背带负担小" : "便携性好"}。`);
   if (l.type === "变焦") r.push(`<em>${l.focal[0]}–${l.focal[1]}mm</em> 变焦覆盖常用焦段，出门少换镜。`);
   else r.push(`<em>${l.focal[0]}mm f/${l.aperture}</em> 定焦，中心 MTF ${(l.mtf.center * 100).toFixed(0)}%，氛围与画质兼顾。`);
+  if (c.bodyType === "DSLR") r.push("<em>单反机型</em>，不推荐新手入门；操作与追焦逻辑偏传统。");
+  if (p.adapted) r.push("<em>FTZ/ETZ 转接</em>，对焦速度会有损失，连拍追焦弱于原生卡口。");
+  if (l.thirdParty) r.push("副厂镜头，性价比高，但个别机身的固件兼容性需确认。");
+  if (c.format === "APS-C" && l.format === "FF") {
+    const k = c.mount === "Canon RF" ? 1.6 : 1.5;
+    r.push("全画幅镜头装在半画幅机身上，等效焦距约 " + Math.round(l.focal[0]*k) + "–" + Math.round(l.focal[1]*k) + "mm。");
+  }
+  if (state.rec.subjects.includes("野生动物") && l.focal[1] >= 400) r.push("焦段达到 400mm 以上，满足生态摄影的远摄需求。");
   const left = budget - p.total;
   r.push(`总价 <em>${money(p.total)}</em>，${left > 0 ? "还剩 " + money(left) + " 可配存储卡/电池/滤镜" : "刚好卡在预算内"}。`);
   return r.slice(0, 6);
@@ -1114,6 +1267,66 @@ function openGadget(id) {
     "</div>";
   $("#modal").classList.add("on");
 }
+
+/* ---------- 对比 ---------- */
+let CMP = [];
+function toggleCompare(t, id){
+  const i = CMP.findIndex(x => x.t === t && x.id === id);
+  if (i >= 0) CMP.splice(i,1);
+  else { if (CMP.length >= 4) { alert("最多同时对比 4 件"); return; } CMP.push({t,id}); }
+  renderCmpBar();
+  document.querySelectorAll(".cmpbtn").forEach(b => {
+    b.classList.toggle("on", CMP.some(x => x.t === b.dataset.ct && x.id === b.dataset.cid));
+  });
+}
+function renderCmpBar(){
+  const bar = document.getElementById("cmpBar");
+  if (!bar) return;
+  bar.classList.toggle("on", CMP.length > 0);
+  document.getElementById("cmpText").textContent = "已选 " + CMP.length + " 件（最多 4 件）";
+}
+function cmpItem(x){ return x.t === "cam" ? cameras.find(c => c.id === x.id) : lenses.find(l => l.id === x.id); }
+function openCompare(){
+  if (CMP.length < 2) { alert("至少选 2 件再对比"); return; }
+  const items = CMP.map(cmpItem).filter(Boolean);
+  const isCam = CMP[0].t === "cam";
+  const rows = [];
+  const add = (label, fn) => rows.push("<tr><th>" + label + "</th>" + items.map(it => "<td>" + fn(it) + "</td>").join("") + "</tr>");
+  add("型号", it => "<b>" + it.model + "</b>");
+  add("品牌", it => it.brand);
+  add("类型", it => it.type);
+  add("国行 / 港水 / 二手", it => money(it.price||it.used) + " / " + (it.hk?money(it.hk):"—") + " / " + money(it.used));
+  if (isCam) {
+    add("画幅 / 像素", it => it.sensor + " · " + it.mp + "MP");
+    add("对焦", it => (it.afLogic||"—") + "（" + it.af + "）");
+    add("防抖", it => it.ibis ? it.ibis + " 档" : "无");
+    add("取景器 / 屏幕", it => (it.evf?"有":"无") + " / " + (it.screen||"—"));
+    add("连拍 / 视频", it => it.burst + " fps / " + it.video);
+    add("重量", it => it.weight + " g");
+    add("适合题材", it => it.tags.join("、"));
+  } else {
+    add("焦段 / 光圈", it => it.focal[0] + "–" + it.focal[1] + "mm f/" + it.aperture);
+    add("画幅 / 副厂", it => (it.format==="APS-C"?"半画幅":it.format==="MF"?"中画幅":"全画幅") + " / " + (it.thirdParty?"是":"否"));
+    add("重量", it => it.weight + " g");
+    add("MTF 中心 / 边缘", it => Math.round(it.mtf.center*100) + " / " + Math.round(it.mtf.edge*100));
+    add("全开中心 / 边缘", it => it.centerWide + " / " + it.edgeWide);
+    add("f/8 中心 / 边缘", it => it.centerF8 + " / " + it.edgeF8);
+    add("抗眩光 / 紫边 / 畸变", it => it.flare + " / " + it.ca + " / " + it.distortion);
+  }
+  document.getElementById("sheet").innerHTML =
+    '<button class="close" onclick="closeModal()">×</button><h2>设备对比</h2>' +
+    '<div class="small">同类型横向对比参数；MTF 为参考拟合值。</div>' +
+    '<table class="cmptable"><thead><tr><th></th>' + items.map(it=>"<th>"+it.model+"</th>").join("") + '</tr></thead><tbody>' + rows.join("") + '</tbody></table>';
+  document.getElementById("modal").classList.add("on");
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest(".cmpbtn");
+  if (b) { e.stopPropagation(); toggleCompare(b.dataset.ct, b.dataset.cid); }
+});
+document.addEventListener("DOMContentLoaded", () => {
+  const go = document.getElementById("cmpGo"); if (go) go.addEventListener("click", openCompare);
+  const cl = document.getElementById("cmpClear"); if (cl) cl.addEventListener("click", () => { CMP = []; renderCmpBar(); document.querySelectorAll(".cmpbtn.on").forEach(x=>x.classList.remove("on")); });
+});
 
 </script>
 </body>
